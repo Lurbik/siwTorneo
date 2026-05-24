@@ -12,7 +12,6 @@
                 th:action="${giocatore.id != null} ? @{/admin/giocatori/{id}/modifica(id=${giocatore.id})} : @{/admin/giocatori/salva}"
                 th:object="${giocatore}" method="post">
 
-                <!-- Errori globali -->
                 <div th:if="${#fields.hasAnyErrors()}" style="background:rgba(139,0,0,0.2); border:1px solid var(--noxus);
                             border-radius:4px; padding:1rem; margin-bottom:1rem;">
                     <p style="color:var(--noxus); font-weight:bold; margin-bottom:0.5rem;">⚠ Correggi i seguenti errori:
@@ -29,7 +28,6 @@
                     <span th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"
                         style="color:var(--noxus); font-size:0.8rem; display:block; margin-top:0.3rem;"></span>
                 </div>
-
                 <div class="form-group">
                     <label>Cognome</label>
                     <input type="text" th:field="*{cognome}"
@@ -37,12 +35,10 @@
                     <span th:if="${#fields.hasErrors('cognome')}" th:errors="*{cognome}"
                         style="color:var(--noxus); font-size:0.8rem; display:block; margin-top:0.3rem;"></span>
                 </div>
-
                 <div class="form-group">
                     <label>Data Nascita</label>
                     <input type="date" name="dataNascita" th:value="${giocatore.dataNascita}" />
                 </div>
-
                 <div class="form-group">
                     <label>Altezza (cm)</label>
                     <input type="number" th:field="*{altezza}"
@@ -50,14 +46,12 @@
                     <span th:if="${#fields.hasErrors('altezza')}" th:errors="*{altezza}"
                         style="color:var(--noxus); font-size:0.8rem; display:block; margin-top:0.3rem;"></span>
                 </div>
-
                 <div class="form-group">
                     <label>Ruolo</label>
                     <select th:field="*{ruolo}">
                         <option th:each="r : ${ruoli}" th:value="${r}" th:text="${r}">Ruolo</option>
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label>Squadra</label>
                     <select name="squadraId">
@@ -69,6 +63,15 @@
                             th:selected="${squadraIdSelezionata != null} ? ${squadraIdSelezionata == s.id} : ${giocatore.squadra != null and giocatore.squadra.id == s.id}">
                         </option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label>URL Immagine (opzionale)</label>
+                    <input type="text" th:field="*{immagine}"
+                        placeholder="https://ddragon.leagueoflegends.com/cdn/14.10.1/img/champion/Darius.png" />
+                    <div th:if="${giocatore.immagine != null and !#strings.isEmpty(giocatore.immagine)}"
+                        style="margin-top:0.5rem;">
+                        <img th:src="${giocatore.immagine}" style="max-width:100px; border-radius:4px;" />
+                    </div>
                 </div>
 
                 <button type="submit" class="btn"

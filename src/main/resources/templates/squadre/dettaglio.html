@@ -5,13 +5,27 @@
 
 <body>
     <nav th:replace="~{fragments/layout :: navbar}"></nav>
-
     <div class="container">
         <h1 th:text="${squadra.nome}">Nome Squadra</h1>
+
+        <!-- Logo squadra -->
+        <div th:if="${squadra.immagine != null}" style="margin-bottom:1rem;">
+            <img th:src="@{/uploads/{img}(img=${squadra.immagine})}"
+                style="max-width:300px; border:1px solid var(--border-color); border-radius:4px;" />
+        </div>
+
+        <!-- Maglietta — FUORI dal th:each, è della squadra non del giocatore -->
+        <div th:if="${squadra.maglietta != null}" style="margin-bottom:1rem;">
+            <p style="color:var(--color-text); font-size:0.85rem; margin-bottom:0.3rem; 
+                      letter-spacing:1px; text-transform:uppercase;">Maglietta Ufficiale</p>
+            <img th:src="@{/uploads/{img}(img=${squadra.maglietta})}"
+                style="max-width:200px; border:1px solid var(--border-color); border-radius:4px;" />
+        </div>
+
         <p th:text="'Fondata nel: ' + ${squadra.annoFondazione}">Anno</p>
         <p th:text="'Città: ' + ${squadra.citta}">Città</p>
 
-        <div sec:authorize="hasRole('ADMIN')" style="margin-bottom:1rem; display:flex; gap:0.5rem;">
+        <div sec:authorize="hasRole('ADMIN')" style="margin-top:1rem; margin-bottom:1rem; display:flex; gap:0.5rem;">
             <a th:href="@{/admin/squadre/{id}/modifica(id=${squadra.id})}" class="btn">✏ Modifica Squadra</a>
             <a th:href="@{/admin/squadre/{id}/elimina(id=${squadra.id})}" class="btn btn-danger">🗑 Elimina Squadra</a>
             <a th:href="@{/admin/giocatori/nuovo}" class="btn">+ Nuovo Giocatore</a>
@@ -20,10 +34,14 @@
         <h2>Rosa giocatori</h2>
         <div class="card-grid">
             <div th:each="g : ${squadra.giocatori}" class="card">
+                <!-- Immagine giocatore DENTRO il th:each -->
+                <div th:if="${g.immagine != null and !#strings.isEmpty(g.immagine)}" style="margin-bottom:0.8rem;">
+                    <img th:src="${g.immagine}"
+                        style="width:100%; max-height:200px; object-fit:cover; object-position:top; border-radius:2px;" />
+                </div>
                 <h3 th:text="${g.nome} + ' ' + ${g.cognome}">Giocatore</h3>
                 <p th:text="'Ruolo: ' + ${g.ruolo}">Ruolo</p>
                 <p th:text="'Altezza: ' + ${g.altezza} + ' cm'">Altezza</p>
-                <!-- Bottoni admin per ogni giocatore — DENTRO il th:each -->
                 <div sec:authorize="hasRole('ADMIN')" style="margin-top:0.5rem; display:flex; gap:0.5rem;">
                     <a th:href="@{/admin/giocatori/{id}/modifica(id=${g.id})}" class="btn"
                         style="padding:0.3rem 0.8rem; font-size:0.8rem;">✏</a>
@@ -35,9 +53,7 @@
 
         <br />
         <a href="/squadre" class="btn">← Torna alle squadre</a>
-        <!-- Bottoni admin per ogni giocatore -->
     </div>
-
     <footer>⚔ Runeterra Football League</footer>
 </body>
 

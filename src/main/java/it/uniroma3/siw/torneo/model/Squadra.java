@@ -36,4 +36,7 @@ public class Squadra {
     @OneToMany(mappedBy = "squadra", cascade = CascadeType.REMOVE)
     private List<Giocatore> giocatori = new ArrayList<>();
 
+    private String immagine;
+    private String maglietta; 
+
 }

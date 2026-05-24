@@ -10,7 +10,8 @@
         <div class="form-container">
             <form
                 th:action="${squadra.id != null} ? @{/admin/squadre/{id}/modifica(id=${squadra.id})} : @{/admin/squadre/salva}"
-                th:object="${squadra}" method="post">
+                th:object="${squadra}" method="post" enctype="multipart/form-data">
+
                 <div th:if="${#fields.hasAnyErrors()}" style="background:rgba(139,0,0,0.2); border:1px solid var(--noxus);
                             border-radius:4px; padding:1rem; margin-bottom:1rem;">
                     <p style="color:var(--noxus); font-weight:bold; margin-bottom:0.5rem;">⚠ Correggi i seguenti errori:
@@ -19,6 +20,7 @@
                         <li th:each="err : ${#fields.allErrors()}" th:text="${err}">Errore</li>
                     </ul>
                 </div>
+
                 <div class="form-group">
                     <label>Nome</label>
                     <input type="text" th:field="*{nome}"
@@ -40,6 +42,45 @@
                     <span th:if="${#fields.hasErrors('citta')}" th:errors="*{citta}"
                         style="color:var(--noxus); font-size:0.8rem; display:block; margin-top:0.3rem;"></span>
                 </div>
+
+                <!-- LOGO SQUADRA -->
+                <div class="form-group">
+                    <label>Logo squadra (opzionale)</label>
+                    <div th:if="${squadra.immagine != null}" style="margin-bottom:0.8rem;">
+                        <img th:src="@{/uploads/{img}(img=${squadra.immagine})}"
+                            style="max-width:150px; border:1px solid var(--border-color); border-radius:4px;" />
+                    </div>
+                    <label for="immagineInput" style="display:flex; align-items:center; gap:0.8rem; cursor:pointer;
+                           padding:0.8rem 1rem; background:var(--bg-secondary); border:1px solid var(--border-color);
+                           border-radius:4px; transition:border-color 0.2s; color:var(--color-text);"
+                        onmouseover="this.style.borderColor='var(--color-gold)'"
+                        onmouseout="this.style.borderColor='var(--border-color)'">
+                        <span style="font-size:1.5rem;">🖼</span>
+                        <span id="nomeFile">Clicca per selezionare il logo...</span>
+                    </label>
+                    <input type="file" id="immagineInput" name="immagine" accept="image/*" style="display:none"
+                        onchange="document.getElementById('nomeFile').textContent = this.files[0]?.name || 'Clicca per selezionare...'" />
+                </div>
+
+                <!-- MAGLIETTA -->
+                <div class="form-group">
+                    <label>Maglietta (opzionale)</label>
+                    <div th:if="${squadra.maglietta != null}" style="margin-bottom:0.8rem;">
+                        <img th:src="@{/uploads/{img}(img=${squadra.maglietta})}"
+                            style="max-width:150px; border:1px solid var(--border-color); border-radius:4px;" />
+                    </div>
+                    <label for="magliettaInput" style="display:flex; align-items:center; gap:0.8rem; cursor:pointer;
+                           padding:0.8rem 1rem; background:var(--bg-secondary); border:1px solid var(--border-color);
+                           border-radius:4px; transition:border-color 0.2s; color:var(--color-text);"
+                        onmouseover="this.style.borderColor='var(--color-gold)'"
+                        onmouseout="this.style.borderColor='var(--border-color)'">
+                        <span style="font-size:1.5rem;">👕</span>
+                        <span id="nomeMaglietta">Clicca per selezionare la maglietta...</span>
+                    </label>
+                    <input type="file" id="magliettaInput" name="maglietta" accept="image/*" style="display:none"
+                        onchange="document.getElementById('nomeMaglietta').textContent = this.files[0]?.name || 'Clicca per selezionare...'" />
+                </div>
+
                 <button type="submit" class="btn"
                     th:text="${squadra.id != null} ? 'Salva modifiche' : 'Crea'">Salva</button>
             </form>

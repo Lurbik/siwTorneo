@@ -5,6 +5,9 @@ import it.uniroma3.siw.torneo.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
@@ -18,17 +21,20 @@ public class AdminController {
     private final GiocatoreService giocatoreService;
     private final ArbitroService arbitroService;
     private final PartitaService partitaService;
+    private final FileService fileService;
 
     public AdminController(TorneoService torneoService,
             SquadraService squadraService,
             GiocatoreService giocatoreService,
             ArbitroService arbitroService,
-            PartitaService partitaService) {
+            PartitaService partitaService,
+            FileService fileService) {
         this.torneoService = torneoService;
         this.squadraService = squadraService;
         this.giocatoreService = giocatoreService;
         this.arbitroService = arbitroService;
         this.partitaService = partitaService;
+        this.fileService = fileService;
     }
 
     @GetMapping
@@ -102,9 +108,16 @@ public class AdminController {
     }
 
     @PostMapping("/squadre/salva")
-    public String salvaSquadra(@Valid @ModelAttribute Squadra squadra, BindingResult result) {
+    public String salvaSquadra(@Valid @ModelAttribute Squadra squadra,
+            BindingResult result,
+            @RequestParam(required = false) MultipartFile immagine,
+            @RequestParam(required = false) MultipartFile maglietta) throws IOException {
         if (result.hasErrors())
             return "admin/form-squadra";
+        if (immagine != null && !immagine.isEmpty())
+            squadra.setImmagine(fileService.salvaFile(immagine));
+        if (maglietta != null && !maglietta.isEmpty())
+            squadra.setMaglietta(fileService.salvaFile(maglietta));
         squadraService.save(squadra);
         return "redirect:/squadre";
     }
@@ -124,9 +137,20 @@ public class AdminController {
     @PostMapping("/squadre/{id}/modifica")
     public String modificaSquadra(@PathVariable Long id,
             @Valid @ModelAttribute Squadra squadra,
-            BindingResult result) {
+            BindingResult result,
+            @RequestParam(required = false) MultipartFile immagine,
+            @RequestParam(required = false) MultipartFile maglietta) throws IOException {
         if (result.hasErrors())
             return "admin/form-squadra";
+        Squadra esistente = squadraService.findById(id);
+        if (immagine != null && !immagine.isEmpty())
+            squadra.setImmagine(fileService.salvaFile(immagine));
+        else
+            squadra.setImmagine(esistente.getImmagine());
+        if (maglietta != null && !maglietta.isEmpty())
+            squadra.setMaglietta(fileService.salvaFile(maglietta));
+        else
+            squadra.setMaglietta(esistente.getMaglietta());
         squadra.setId(id);
         squadraService.save(squadra);
         return "redirect:/squadre/" + id;

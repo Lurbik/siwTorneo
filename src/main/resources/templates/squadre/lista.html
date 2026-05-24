@@ -15,6 +15,11 @@
         </form>
         <div class="card-grid">
             <div th:each="s : ${squadre}" class="card">
+                <!-- immagine DENTRO il th:each -->
+                <div th:if="${s.immagine != null}" style="margin-bottom:0.8rem;">
+                    <img th:src="@{/uploads/{img}(img=${s.immagine})}"
+                        style="width:100%; max-height:150px; object-fit:cover; border-radius:2px;" />
+                </div>
                 <h3 th:text="${s.nome}">Nome squadra</h3>
                 <p th:text="'Fondata nel: ' + ${s.annoFondazione}">Anno</p>
                 <p th:text="'Città: ' + ${s.citta}">Città</p>

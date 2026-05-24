@@ -40,4 +40,6 @@ public class Giocatore {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Squadra squadra;
 
+    private String immagine;
+
 }
