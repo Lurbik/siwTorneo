@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head('Partita')}"></head>
+
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+    <div class="container">
+        <h1>
+            <span th:text="${partita.squadraCasa.nome}">Casa</span>
+            vs
+            <span th:text="${partita.squadraOspite.nome}">Ospite</span>
+        </h1>
+        <p th:text="'Data: ' + ${partita.dataOra}">Data</p>
+        <p th:text="'Luogo: ' + ${partita.luogo}">Luogo</p>
+        <p th:text="'Stato: ' + ${partita.stato}">Stato</p>
+        <p th:if="${partita.stato.name() == 'COMPLETATA'}"
+            th:text="'Risultato: ' + ${partita.goalHome} + ' - ' + ${partita.goalGuest}">
+        </p>
+
+        <h2>Commenti</h2>
+
+        <!-- Form nuovo commento — solo utenti loggati -->
+        <div sec:authorize="isAuthenticated()" style="margin-bottom:1.5rem;">
+            <div class="form-container" style="max-width:100%;">
+                <form th:action="@{/commenti/nuovo}" method="post">
+                    <input type="hidden" name="partitaId" th:value="${partita.id}" />
+                    <div class="form-group">
+                        <label>Scrivi un commento</label>
+                        <textarea name="testo" rows="3" placeholder="Il tuo commento..."></textarea>
+                    </div>
+                    <button type="submit" class="btn">Pubblica</button>
+                </form>
+            </div>
+        </div>
+
+        <div sec:authorize="isAnonymous()" style="margin-bottom:1rem;">
+            <p style="color:var(--color-text);">
+                <a href="/login">Accedi</a> per lasciare un commento.
+            </p>
+        </div>
+
+        <!-- Lista commenti -->
+        <div th:each="c : ${partita.commenti}" class="card" style="margin-bottom:0.8rem;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <div>
+                    <p style="color:var(--color-gold); font-weight:bold; margin-bottom:0.3rem;"
+                        th:text="${c.creatore.username}">Utente</p>
+                    <p th:text="${c.testo}" style="color:var(--color-text-light);">Testo</p>
+                    <p style="color:var(--color-text); font-size:0.8rem; margin-top:0.3rem;"
+                        th:text="${c.dataCreazione}">Data</p>
+                </div>
+                <div style="display:flex; gap:0.5rem;">
+                    <!-- Modifica — solo il proprietario -->
+                    <a th:if="${#authentication.name == c.creatore.username}"
+                        th:href="@{/commenti/{id}/modifica(id=${c.id})}" class="btn"
+                        style="padding:0.3rem 0.8rem; font-size:0.8rem;">✏</a>
+                    <!-- Elimina — proprietario o admin -->
+                    <a th:if="${#authentication.name == c.creatore.username or #authorization.expression('hasRole(''ADMIN'')')}"
+                        th:href="@{/commenti/{id}/elimina(id=${c.id})}" class="btn btn-danger"
+                        style="padding:0.3rem 0.8rem; font-size:0.8rem;">🗑</a>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(partita.commenti)}" style="margin-bottom:1rem;">
+            <p style="color:var(--color-text);">Nessun commento ancora.</p>
+        </div>
+
+        <br />
+        <a href="/partite" class="btn">← Torna alle partite</a>
+        <div sec:authorize="hasRole('ADMIN')" style="margin-top:1rem; display:flex; gap:0.5rem;">
+            <a th:href="@{/admin/partite/{id}/modifica(id=${partita.id})}" class="btn">✏ Modifica</a>
+            <a th:href="@{/admin/partite/{id}/elimina(id=${partita.id})}" class="btn btn-danger">🗑 Elimina</a>
+        </div>
+    </div>
+
+    <footer>⚔ Runeterra Football League</footer>
+</body>
+
+</html>

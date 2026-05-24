@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head('Dashboard Admin')}"></head>
+
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    <div class="container">
+        <h1>⚔ Pannello Admin</h1>
+        <div class="card-grid">
+            <div class="card">
+                <h3>🏆 Tornei</h3>
+                <p>Crea e gestisci i tornei della lega.</p>
+                <br />
+                <a href="/admin/tornei/nuovo" class="btn">Nuovo Torneo</a>
+            </div>
+            <div class="card">
+                <h3>🛡 Squadre</h3>
+                <p>Aggiungi squadre e gestisci le rose.</p>
+                <br />
+                <a href="/admin/squadre/nuova" class="btn">Nuova Squadra</a>
+            </div>
+            <div class="card">
+                <h3>⚽ Giocatori</h3>
+                <p>Registra nuovi giocatori nelle squadre.</p>
+                <br />
+                <a href="/admin/giocatori/nuovo" class="btn">Nuovo Giocatore</a>
+            </div>
+            <div class="card">
+                <h3>👁 Arbitri</h3>
+                <p>Gestisci il corpo arbitrale della lega.</p>
+                <br />
+                <a href="/admin/arbitri/nuovo" class="btn">Nuovo Arbitro</a>
+            </div>
+            <div class="card">
+                <h3>📅 Partite</h3>
+                <p>Programma e aggiorna le partite.</p>
+                <br />
+                <a href="/admin/partite/nuova" class="btn">Nuova Partita</a>
+            </div>
+        </div>
+    </div>
+    <footer>⚔ Runeterra Football League</footer>
+</body>
+
+</html>

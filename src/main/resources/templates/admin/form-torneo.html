@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head('Torneo')}"></head>
+
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    <div class="container">
+        <h1 th:text="${torneo.id != null} ? 'Modifica Torneo' : 'Crea Torneo'">Torneo</h1>
+        <div class="form-container">
+            <form
+                th:action="${torneo.id != null} ? @{/admin/tornei/{id}/modifica(id=${torneo.id})} : @{/admin/tornei/salva}"
+                th:object="${torneo}" method="post">
+                <div th:if="${#fields.hasAnyErrors()}" style="background:rgba(139,0,0,0.2); border:1px solid var(--noxus);
+                            border-radius:4px; padding:1rem; margin-bottom:1rem;">
+                    <p style="color:var(--noxus); font-weight:bold; margin-bottom:0.5rem;">⚠ Correggi i seguenti errori:
+                    </p>
+                    <ul style="color:var(--color-text-light); padding-left:1.5rem;">
+                        <li th:each="err : ${#fields.allErrors()}" th:text="${err}">Errore</li>
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" th:field="*{nome}"
+                        th:classappend="${#fields.hasErrors('nome')} ? 'error-field' : ''" />
+                    <span th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"
+                        style="color:var(--noxus); font-size:0.8rem; display:block; margin-top:0.3rem;"></span>
+                </div>
+                <div class="form-group">
+                    <label>Anno</label>
+                    <input type="number" th:field="*{anno}"
+                        th:classappend="${#fields.hasErrors('anno')} ? 'error-field' : ''" />
+                    <span th:if="${#fields.hasErrors('anno')}" th:errors="*{anno}"
+                        style="color:var(--noxus); font-size:0.8rem; display:block; margin-top:0.3rem;"></span>
+                </div>
+                <div class="form-group">
+                    <label>Descrizione</label>
+                    <textarea th:field="*{descrizione}" rows="4"></textarea>
+                </div>
+                <button type="submit" class="btn"
+                    th:text="${torneo.id != null} ? 'Salva modifiche' : 'Crea'">Salva</button>
+            </form>
+            <br />
+            <a href="/admin" class="btn">← Dashboard</a>
+        </div>
+    </div>
+    <footer>⚔ Runeterra Football League</footer>
+</body>
+
+</html>

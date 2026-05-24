@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head('Analisi Prestazioni')}"></head>
+
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    <div class="container">
+        <h1>⚡ Analisi Prestazioni</h1>
+        <p style="color:var(--color-text); margin-bottom:2rem;">
+            Confronto tra strategie di caricamento JPA su
+            <strong th:text="${numTornei}">N</strong> tornei,
+            <strong th:text="${numSquadre}">N</strong> squadre totali,
+            <strong th:text="${numPartite}">N</strong> partite totali.
+        </p>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>🐢 LAZY (default)</h3>
+                <p>Carica le relazioni solo quando vengono accedute. Genera il problema <strong>N+1</strong>: una query
+                    per i tornei, poi una query per ogni torneo per squadre e partite.</p>
+                <br />
+                <div style="font-size:2rem; color:var(--color-gold); font-weight:bold;" th:text="${tempoLazy}">—</div>
+                <p style="margin-top:0.5rem;">Query generate: <strong th:text="${numTornei * 2 + 1}">N</strong></p>
+            </div>
+
+            <div class="card">
+                <h3>⚡ JOIN FETCH squadre</h3>
+                <p>Carica tornei e squadre in <strong>una sola query</strong> con JOIN SQL. Elimina N+1 per le squadre.
+                </p>
+                <br />
+                <div style="font-size:2rem; color:var(--ionia); font-weight:bold;" th:text="${tempoJoinFetch}">—</div>
+                <p style="margin-top:0.5rem;">Query generate: <strong>1</strong></p>
+            </div>
+
+            <div class="card">
+                <h3>🚀 JOIN FETCH partite</h3>
+                <p>Carica tornei e partite in <strong>una sola query</strong> con JOIN SQL.
+                    Elimina N+1 per le partite.</p>
+                <br />
+                <div style="font-size:2rem; color:var(--freljord); font-weight:bold;" th:text="${tempoJoinFetchAll}">—
+                </div>
+                <p style="margin-top:0.5rem;">Query generate: <strong>1</strong></p>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top:2rem;">
+            <h3>📊 Conclusioni</h3>
+            <p>La strategia <strong>LAZY</strong> è comoda ma pericolosa in produzione: con molti record genera decine o
+                centinaia di query inutili.</p>
+            <p style="margin-top:0.5rem;"><strong>JOIN FETCH</strong> risolve il problema N+1 caricando tutto in una
+                query con JOIN SQL. È la soluzione raccomandata quando sai in anticipo che avrai bisogno delle
+                relazioni.</p>
+            <p style="margin-top:0.5rem;">Il trade-off: JOIN FETCH carica sempre tutto, anche se non serve. Per casi
+                complessi si usa <strong>@EntityGraph</strong> per specificare esattamente cosa caricare caso per caso.
+            </p>
+        </div>
+    </div>
+    <footer>⚔ Runeterra Football League</footer>
+</body>
+
+</html>

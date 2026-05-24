@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head('Modifica Commento')}"></head>
+
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    <div class="container">
+        <h1>Modifica Commento</h1>
+        <div class="form-container">
+            <form th:action="@{/commenti/{id}/modifica(id=${commento.id})}" method="post">
+                <div class="form-group">
+                    <label>Testo</label>
+                    <textarea th:text="${commento.testo}" name="testo" rows="4"></textarea>
+                </div>
+                <button type="submit" class="btn">Salva</button>
+            </form>
+            <br />
+            <a th:href="@{/partite/{id}(id=${commento.partita.id})}" class="btn">← Annulla</a>
+        </div>
+    </div>
+    <footer>⚔ Runeterra Football League</footer>
+</body>
+
+</html>

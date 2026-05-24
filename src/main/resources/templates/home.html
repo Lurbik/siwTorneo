@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head('Home')}"></head>
+
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+    <div class="container">
+        <h1>Runeterra Football League</h1>
+        <p style="color: var(--color-text); margin-bottom: 2rem;">
+            La lega più leggendaria di Runeterra. Sette regioni, un solo trofeo.
+        </p>
+
+        <div class="card-grid">
+            <div class="card">
+                <h3>🏆 Tornei</h3>
+                <p>Scopri i tornei in corso e la storia dei campionati passati.</p>
+                <br />
+                <a href="/tornei" class="btn">Vedi Tornei</a>
+            </div>
+            <div class="card">
+                <h3>⚔ Squadre</h3>
+                <p>Le sette regioni si sfidano per la gloria di Runeterra.</p>
+                <br />
+                <a href="/squadre" class="btn">Vedi Squadre</a>
+            </div>
+            <div class="card">
+                <h3>📅 Partite</h3>
+                <p>Risultati, calendari e statistiche di ogni incontro.</p>
+                <br />
+                <a href="/partite" class="btn">Vedi Partite</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>⚔ Runeterra Football League — All rights reserved across all realms</footer>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head('Squadre')}"></head>
+
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+    <div class="container">
+        <h1>Squadre</h1>
+        <div class="card-grid">
+            <div th:each="s : ${squadre}" class="card">
+                <h3 th:text="${s.nome}">Nome squadra</h3>
+                <p th:text="'Fondata nel: ' + ${s.annoFondazione}">Anno</p>
+                <p th:text="'Città: ' + ${s.citta}">Città</p>
+                <br />
+                <a th:href="@{/squadre/{id}(id=${s.id})}" class="btn">Dettaglio</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>⚔ Runeterra Football League</footer>
+</body>
+
+</html>

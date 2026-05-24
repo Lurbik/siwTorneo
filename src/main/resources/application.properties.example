@@ -1,0 +1,10 @@
+spring.application.name=torneo
+spring.datasource.url=jdbc:postgresql://localhost:5432/siw_tornei
+spring.datasource.username=postgres
+spring.datasource.password=LA_TUA_PASSWORD
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+server.port=8080

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head('Partita')}"></head>
+
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    <div class="container">
+        <h1 th:text="${partita.id != null} ? 'Modifica Partita' : 'Crea Partita'">Partita</h1>
+        <div class="form-container">
+            <form
+                th:action="${partita.id != null} ? @{/admin/partite/{id}/modifica(id=${partita.id})} : @{/admin/partite/salva}"
+                th:object="${partita}" method="post">
+                <div th:if="${#fields.hasAnyErrors()}" style="background:rgba(139,0,0,0.2); border:1px solid var(--noxus);
+                            border-radius:4px; padding:1rem; margin-bottom:1rem;">
+                    <p style="color:var(--noxus); font-weight:bold; margin-bottom:0.5rem;">⚠ Correggi i seguenti errori:
+                    </p>
+                    <ul style="color:var(--color-text-light); padding-left:1.5rem;">
+                        <li th:each="err : ${#fields.allErrors()}" th:text="${err}">Errore</li>
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <label>Data e Ora</label>
+                    <input type="datetime-local" th:field="*{dataOra}"
+                        th:classappend="${#fields.hasErrors('dataOra')} ? 'error-field' : ''" />
+                    <span th:if="${#fields.hasErrors('dataOra')}" th:errors="*{dataOra}"
+                        style="color:var(--noxus); font-size:0.8rem; display:block; margin-top:0.3rem;"></span>
+                </div>
+                <div class="form-group">
+                    <label>Luogo</label>
+                    <input type="text" th:field="*{luogo}"
+                        th:classappend="${#fields.hasErrors('luogo')} ? 'error-field' : ''" />
+                    <span th:if="${#fields.hasErrors('luogo')}" th:errors="*{luogo}"
+                        style="color:var(--noxus); font-size:0.8rem; display:block; margin-top:0.3rem;"></span>
+                </div>
+                <div class="form-group">
+                    <label>Stato</label>
+                    <select th:field="*{stato}">
+                        <option th:each="s : ${statiPartita}" th:value="${s}" th:text="${s}">Stato</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Goal Casa</label>
+                    <input type="number" th:field="*{goalHome}" min="0"
+                        th:classappend="${#fields.hasErrors('goalHome')} ? 'error-field' : ''" />
+                    <span th:if="${#fields.hasErrors('goalHome')}" th:errors="*{goalHome}"
+                        style="color:var(--noxus); font-size:0.8rem; display:block; margin-top:0.3rem;"></span>
+                </div>
+                <div class="form-group">
+                    <label>Goal Ospite</label>
+                    <input type="number" th:field="*{goalGuest}" min="0"
+                        th:classappend="${#fields.hasErrors('goalGuest')} ? 'error-field' : ''" />
+                    <span th:if="${#fields.hasErrors('goalGuest')}" th:errors="*{goalGuest}"
+                        style="color:var(--noxus); font-size:0.8rem; display:block; margin-top:0.3rem;"></span>
+                </div>
+                <div class="form-group">
+                    <label>Torneo</label>
+                    <select name="torneoId">
+                        <option value="" disabled
+                            th:selected="${torneoIdSelezionato == null and partita.torneo == null}">
+                            — Seleziona torneo —
+                        </option>
+                        <option th:each="t : ${tornei}" th:value="${t.id}" th:text="${t.nome}"
+                            th:selected="${torneoIdSelezionato != null} ? ${torneoIdSelezionato == t.id} : ${partita.torneo != null and partita.torneo.id == t.id}">
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Squadra Casa</label>
+                    <select name="squadraCasaId">
+                        <option value="" disabled
+                            th:selected="${squadraCasaIdSelezionata == null and partita.squadraCasa == null}">
+                            — Seleziona squadra —
+                        </option>
+                        <option th:each="s : ${squadre}" th:value="${s.id}" th:text="${s.nome}"
+                            th:selected="${squadraCasaIdSelezionata != null} ? ${squadraCasaIdSelezionata == s.id} : ${partita.squadraCasa != null and partita.squadraCasa.id == s.id}">
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Squadra Ospite</label>
+                    <select name="squadraOspiteId">
+                        <option value="" disabled
+                            th:selected="${squadraOspiteIdSelezionata == null and partita.squadraOspite == null}">
+                            — Seleziona squadra —
+                        </option>
+                        <option th:each="s : ${squadre}" th:value="${s.id}" th:text="${s.nome}"
+                            th:selected="${squadraOspiteIdSelezionata != null} ? ${squadraOspiteIdSelezionata == s.id} : ${partita.squadraOspite != null and partita.squadraOspite.id == s.id}">
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Arbitro</label>
+                    <select name="arbitroId">
+                        <option value="" disabled
+                            th:selected="${arbitroIdSelezionato == null and partita.arbitro == null}">
+                            — Seleziona arbitro —
+                        </option>
+                        <option th:each="a : ${arbitri}" th:value="${a.id}" th:text="${a.cognome} + ' ' + ${a.nome}"
+                            th:selected="${arbitroIdSelezionato != null} ? ${arbitroIdSelezionato == a.id} : ${partita.arbitro != null and partita.arbitro.id == a.id}">
+                        </option>
+                    </select>
+                </div>
+                <button type="submit" class="btn"
+                    th:text="${partita.id != null} ? 'Salva modifiche' : 'Crea'">Salva</button>
+            </form>
+            <br />
+            <a href="/admin" class="btn">← Dashboard</a>
+        </div>
+    </div>
+    <footer>⚔ Runeterra Football League</footer>
+</body>
+
+</html>

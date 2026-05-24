@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Tornei')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+    <div class="container">
+        <h1>Tornei</h1>
+        <div class="card-grid">
+            <div th:each="t : ${tornei}" class="card">
+                <h3 th:text="${t.nome}">Nome torneo</h3>
+                <p th:text="'Anno: ' + ${t.anno}">Anno</p>
+                <p th:text="${t.descrizione}">Descrizione</p>
+                <br/>
+                <a th:href="@{/tornei/{id}(id=${t.id})}" class="btn">Dettaglio</a>
+            </div>
+        </div>
+        <div th:if="${#lists.isEmpty(tornei)}">
+            <p>Nessun torneo disponibile.</p>
+        </div>
+    </div>
+
+    <footer>⚔ Runeterra Football League</footer>
+</body>
+</html>

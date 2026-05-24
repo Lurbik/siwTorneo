@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head('Partite')}"></head>
+
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+    <div class="container">
+        <h1>Partite</h1>
+        <div th:each="p : ${partite}" class="card">
+            <h3>
+                <span th:text="${p.squadraCasa.nome}">Casa</span>
+                vs
+                <span th:text="${p.squadraOspite.nome}">Ospite</span>
+            </h3>
+            <p th:text="'Data: ' + ${p.dataOra}">Data</p>
+            <p th:text="'Luogo: ' + ${p.luogo}">Luogo</p>
+            <p th:text="'Stato: ' + ${p.stato}">Stato</p>
+            <br />
+            <a th:href="@{/partite/{id}(id=${p.id})}" class="btn">Dettaglio</a>
+        </div>
+        <div th:if="${#lists.isEmpty(partite)}">
+            <p>Nessuna partita disponibile.</p>
+        </div>
+    </div>
+
+    <footer>⚔ Runeterra Football League</footer>
+</body>
+
+</html>

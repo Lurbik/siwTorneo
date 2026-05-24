@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head('Gestisci Squadre')}"></head>
+
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    <div class="container">
+        <h1 th:text="'Squadre — ' + ${torneo.nome}">Squadre Torneo</h1>
+        <div class="form-container" style="max-width:800px;">
+            <form th:action="@{/admin/tornei/{id}/squadre(id=${torneo.id})}" method="post">
+
+                <!-- Errori -->
+                <div th:if="${#fields.hasAnyErrors()}"
+                     style="background:rgba(139,0,0,0.2); border:1px solid var(--noxus);
+                            border-radius:4px; padding:1rem; margin-bottom:1rem;">
+                    <p style="color:var(--noxus); font-weight:bold; margin-bottom:0.5rem;">⚠ Correggi i seguenti errori:</p>
+                    <ul style="color:var(--color-text-light); padding-left:1.5rem;">
+                        <li th:each="err : ${#fields.allErrors()}" th:text="${err}">Errore</li>
+                    </ul>
+                </div>
+
+                <label style="display:block; margin-bottom:1rem; color:var(--color-gold-light); 
+                               font-size:0.85rem; letter-spacing:1px; text-transform:uppercase;">
+                    Seleziona le squadre partecipanti
+                </label>
+
+                <div
+                    style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:0.8rem; margin-bottom:1.5rem;">
+                    <div th:each="s : ${tutteLeSquadre}" class="squadra-card"
+                        th:classappend="${torneo.squadre.contains(s)} ? ' selected' : ''" th:data-id="${s.id}"
+                        onclick="toggleSquadra(this)">
+                        <span th:text="${s.nome}">Squadra</span>
+                        <span class="check-icon">✓</span>
+                        <input type="checkbox" name="squadreIds" th:value="${s.id}"
+                            th:checked="${torneo.squadre.contains(s)}" style="display:none" />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Salva</button>
+            </form>
+            <br />
+            <a th:href="@{/tornei/{id}(id=${torneo.id})}" class="btn">← Torna al torneo</a>
+        </div>
+    </div>
+
+    <style>
+        .squadra-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            color: var(--color-text);
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .squadra-card:hover {
+            border-color: var(--color-gold);
+            color: var(--color-text-light);
+        }
+
+        .squadra-card.selected {
+            border-color: var(--color-gold);
+            background: rgba(200, 155, 60, 0.1);
+            color: var(--color-gold-light);
+        }
+
+        .check-icon {
+            color: var(--color-gold);
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .squadra-card.selected .check-icon {
+            opacity: 1;
+        }
+    </style>
+
+    <script>
+        function toggleSquadra(card) {
+            card.classList.toggle('selected');
+            const checkbox = card.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+        }
+    </script>
+
+    <footer>⚔ Runeterra Football League</footer>
+</body>
+
+</html>

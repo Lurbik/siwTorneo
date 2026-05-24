@@ -1,0 +1,36 @@
+<!-- register.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head('Registrazione')}"></head>
+
+<body>
+    <nav th:replace="~{fragments/layout :: navbar-public}"></nav>
+
+    <div class="container">
+        <h1>Registrati</h1>
+        <div class="form-container">
+            <form th:action="@{/register}" th:object="${utente}" method="post">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" th:field="*{username}" />
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" th:field="*{email}" />
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" th:field="*{password}" />
+                </div>
+                <button type="submit" class="btn">Registrati</button>
+            </form>
+            <br />
+            <a href="/login">Hai già un account? Accedi</a>
+        </div>
+    </div>
+
+    <footer>⚔ Runeterra Football League</footer>
+</body>
+
+</html>
