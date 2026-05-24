@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class SquadraController {
@@ -15,15 +16,21 @@ public class SquadraController {
         this.squadraService = squadraService;
     }
 
-    @GetMapping("/squadre")
-    public String listaSquadre(Model model) {
-        model.addAttribute("squadre", squadraService.findAll());
-        return "squadre/lista";
-    }
-
     @GetMapping("/squadre/{id}")
     public String dettaglioSquadra(@PathVariable Long id, Model model) {
         model.addAttribute("squadra", squadraService.findById(id));
         return "squadre/dettaglio";
     }
+
+    @GetMapping("/squadre")
+    public String listaSquadre(@RequestParam(required = false) String search, Model model) {
+        if (search != null && !search.isBlank()) {
+            model.addAttribute("squadre", squadraService.findByNome(search));
+        } else {
+            model.addAttribute("squadre", squadraService.findAll());
+        }
+        model.addAttribute("search", search);
+        return "squadre/lista";
+    }
+
 }

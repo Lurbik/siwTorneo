@@ -46,4 +46,9 @@ public class TorneoService {
         return torneoRepository.findAllWithPartite();
     }
 
+    @Transactional(readOnly = true)
+    public List<Torneo> findByNome(String nome) {
+        return torneoRepository.findByNomeContainingIgnoreCase(nome);
+    }
+
 }

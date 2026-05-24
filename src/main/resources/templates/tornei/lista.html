@@ -1,17 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{fragments/layout :: head('Tornei')}"></head>
+
 <body>
     <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
     <div class="container">
         <h1>Tornei</h1>
+        <form th:action="@{/tornei}" method="get" style="margin-bottom:1.5rem; display:flex; gap:0.5rem;">
+            <input type="text" name="search" th:value="${search}" placeholder="Cerca torneo..." style="flex:1; background:var(--bg-secondary); border:1px solid var(--border-color);
+                  color:var(--color-text-light); padding:0.6rem 1rem; border-radius:2px;" />
+            <button type="submit" class="btn">Cerca</button>
+            <a th:if="${search != null}" href="/tornei" class="btn">✕</a>
+        </form>
         <div class="card-grid">
             <div th:each="t : ${tornei}" class="card">
                 <h3 th:text="${t.nome}">Nome torneo</h3>
                 <p th:text="'Anno: ' + ${t.anno}">Anno</p>
                 <p th:text="${t.descrizione}">Descrizione</p>
-                <br/>
+                <br />
                 <a th:href="@{/tornei/{id}(id=${t.id})}" class="btn">Dettaglio</a>
             </div>
         </div>
@@ -22,4 +30,5 @@
 
     <footer>⚔ Runeterra Football League</footer>
 </body>
+
 </html>

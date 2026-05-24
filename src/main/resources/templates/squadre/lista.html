@@ -5,9 +5,14 @@
 
 <body>
     <nav th:replace="~{fragments/layout :: navbar}"></nav>
-
     <div class="container">
         <h1>Squadre</h1>
+        <form th:action="@{/squadre}" method="get" style="margin-bottom:1.5rem; display:flex; gap:0.5rem;">
+            <input type="text" name="search" th:value="${search}" placeholder="Cerca squadra..." style="flex:1; background:var(--bg-secondary); border:1px solid var(--border-color);
+                          color:var(--color-text-light); padding:0.6rem 1rem; border-radius:2px;" />
+            <button type="submit" class="btn">Cerca</button>
+            <a th:if="${search != null}" href="/squadre" class="btn">✕</a>
+        </form>
         <div class="card-grid">
             <div th:each="s : ${squadre}" class="card">
                 <h3 th:text="${s.nome}">Nome squadra</h3>
@@ -17,8 +22,10 @@
                 <a th:href="@{/squadre/{id}(id=${s.id})}" class="btn">Dettaglio</a>
             </div>
         </div>
+        <div th:if="${#lists.isEmpty(squadre)}">
+            <p>Nessuna squadra disponibile.</p>
+        </div>
     </div>
-
     <footer>⚔ Runeterra Football League</footer>
 </body>
 

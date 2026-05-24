@@ -9,11 +9,11 @@ import java.util.List;
 public interface TorneoRepository extends JpaRepository<Torneo, Long> {
     Optional<Torneo> findByNome(String nome);
 
-
     @Query("SELECT DISTINCT t FROM Torneo t LEFT JOIN FETCH t.squadre")
     List<Torneo> findAllWithSquadre();
 
     @Query("SELECT DISTINCT t FROM Torneo t LEFT JOIN FETCH t.partite")
     List<Torneo> findAllWithPartite();
 
+    List<Torneo> findByNomeContainingIgnoreCase(String nome);
 }

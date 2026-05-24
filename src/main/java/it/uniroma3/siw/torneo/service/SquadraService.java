@@ -35,4 +35,10 @@ public class SquadraService {
     public void deleteById(Long id) {
         squadraRepository.deleteById(id);
     }
+
+    @Transactional(readOnly = true)
+    public List<Squadra> findByNome(String nome) {
+        return squadraRepository.findByNomeContainingIgnoreCase(nome);
+    }
+
 }
