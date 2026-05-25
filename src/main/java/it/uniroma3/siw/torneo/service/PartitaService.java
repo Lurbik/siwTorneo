@@ -4,6 +4,10 @@ import it.uniroma3.siw.torneo.model.Partita;
 import it.uniroma3.siw.torneo.repository.PartitaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -34,5 +38,11 @@ public class PartitaService {
     @Transactional
     public void deleteById(Long id) {
         partitaRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Partita> findPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("dataOra").descending());
+        return partitaRepository.findAll(pageable);
     }
 }

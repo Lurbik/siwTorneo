@@ -23,6 +23,22 @@
         <div th:if="${#lists.isEmpty(partite)}">
             <p>Nessuna partita disponibile.</p>
         </div>
+        <!-- Paginazione -->
+        <div th:if="${totalePagine > 1}"
+            style="display:flex; justify-content:center; align-items:center; gap:0.5rem; margin-top:2rem;">
+
+            <a th:if="${hasPrecedente}" th:href="@{/partite(page=${paginaCorrente - 1})}" class="btn"
+                style="padding:0.4rem 1rem;">← Precedente</a>
+
+            <span th:each="i : ${#numbers.sequence(0, totalePagine - 1)}">
+                <a th:href="@{/partite(page=${i})}" th:text="${i + 1}" class="btn"
+                    th:style="${i == paginaCorrente} ? 'background:var(--color-gold); color:var(--bg-primary); padding:0.4rem 0.8rem;' : 'padding:0.4rem 0.8rem;'">
+                </a>
+            </span>
+
+            <a th:if="${hasSuccessiva}" th:href="@{/partite(page=${paginaCorrente + 1})}" class="btn"
+                style="padding:0.4rem 1rem;">Successiva →</a>
+        </div>
     </div>
 
     <footer>⚔ Runeterra Football League</footer>

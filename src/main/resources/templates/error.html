@@ -7,19 +7,27 @@
     <nav th:replace="~{fragments/layout :: navbar}"></nav>
     <div class="container" style="text-align:center; padding-top:4rem;">
 
-        <div style="font-size:5rem; margin-bottom:1rem;">⚔</div>
+        <div style="font-size:4rem; margin-bottom:1.5rem;">⚔</div>
 
-        <h1 th:text="${status}">Errore</h1>
+        <h1 style="font-size:4rem; margin-bottom:0.5rem; color:var(--color-gold);">
+            Errore
+        </h1>
 
-        <p style="color:var(--color-text); font-size:1.1rem; margin-bottom:2rem;" th:text="${status == 404} ? 'Questa pagina non esiste in nessuna regione di Runeterra.' :
-                    ${status == 403} ? 'Non hai i permessi per accedere a questa area.' :
-                    'Qualcosa è andato storto. Anche i campioni a volte falliscono.'">
+        <h2 style="color:var(--color-text-light); margin-bottom:1rem;">
+            Qualcosa è andato storto
+        </h2>
+
+        <p style="color:var(--color-text); margin-bottom:3rem;
+                  max-width:500px; margin-left:auto; margin-right:auto;">
+            Un errore inatteso ha colpito il server di Runeterra.
+            Anche i migliori campioni a volte cadono.
         </p>
 
-        <div style="display:flex; gap:1rem; justify-content:center;">
+        <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
             <a href="/" class="btn">🏠 Torna alla Home</a>
             <a href="javascript:history.back()" class="btn">← Torna indietro</a>
         </div>
+
     </div>
     <footer>⚔ Runeterra Football League</footer>
 </body>
