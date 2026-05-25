@@ -6,43 +6,55 @@
 <body>
     <nav th:replace="~{fragments/layout :: navbar}"></nav>
     <div class="container">
-        <h1 th:text="${squadra.nome}">Nome Squadra</h1>
 
-        <!-- Logo squadra -->
-        <div th:if="${squadra.immagine != null}" style="margin-bottom:1rem;">
-            <img th:src="@{/uploads/{img}(img=${squadra.immagine})}"
-                style="max-width:300px; border:1px solid var(--border-color); border-radius:4px;" />
+        <!-- HEADER SQUADRA — logo + nome + info -->
+        <div style="display:flex; align-items:center; gap:1.5rem; margin-bottom:2rem;
+                    padding-bottom:1.5rem; border-bottom:1px solid var(--border-color);">
+            <div th:if="${squadra.immagine != null}" style="flex-shrink:0;">
+                <img th:src="@{/uploads/{img}(img=${squadra.immagine})}"
+                    style="width:90px; height:90px; object-fit:contain;" />
+            </div>
+            <div>
+                <h1 th:text="${squadra.nome}" style="margin-bottom:0.3rem; border:none; padding:0;">
+                    Nome Squadra
+                </h1>
+                <p th:text="'📍 ' + ${squadra.citta}" style="color:var(--color-text); margin:0.2rem 0;">Città</p>
+                <p th:text="'🏛 Fondata nel ' + ${squadra.annoFondazione}"
+                    style="color:var(--color-text); margin:0.2rem 0;">Anno</p>
+            </div>
         </div>
 
-        <!-- Maglietta — FUORI dal th:each, è della squadra non del giocatore -->
-        <div th:if="${squadra.maglietta != null}" style="margin-bottom:1rem;">
-            <p style="color:var(--color-text); font-size:0.85rem; margin-bottom:0.3rem; 
-                      letter-spacing:1px; text-transform:uppercase;">Maglietta Ufficiale</p>
-            <img th:src="@{/uploads/{img}(img=${squadra.maglietta})}"
-                style="max-width:200px; border:1px solid var(--border-color); border-radius:4px;" />
-        </div>
-
-        <p th:text="'Fondata nel: ' + ${squadra.annoFondazione}">Anno</p>
-        <p th:text="'Città: ' + ${squadra.citta}">Città</p>
-
-        <div sec:authorize="hasRole('ADMIN')" style="margin-top:1rem; margin-bottom:1rem; display:flex; gap:0.5rem;">
-            <a th:href="@{/admin/squadre/{id}/modifica(id=${squadra.id})}" class="btn">✏ Modifica Squadra</a>
-            <a th:href="@{/admin/squadre/{id}/elimina(id=${squadra.id})}" class="btn btn-danger">🗑 Elimina Squadra</a>
+        <!-- BOTTONI ADMIN -->
+        <div sec:authorize="hasRole('ADMIN')" style="margin-bottom:1.5rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <a th:href="@{/admin/squadre/{id}/modifica(id=${squadra.id})}" class="btn">✏ Modifica</a>
+            <a th:href="@{/admin/squadre/{id}/elimina(id=${squadra.id})}" class="btn btn-danger">🗑 Elimina</a>
             <a th:href="@{/admin/giocatori/nuovo}" class="btn">+ Nuovo Giocatore</a>
         </div>
 
+        <!-- MAGLIETTA — solo nel dettaglio, in basso sotto l'header -->
+        <div th:if="${squadra.maglietta != null}" style="margin-bottom:2rem;">
+            <h2 style="font-size:0.85rem; letter-spacing:2px; color:var(--color-text); margin-bottom:0.8rem;">
+                DIVISA UFFICIALE
+            </h2>
+            <img th:src="@{/uploads/{img}(img=${squadra.maglietta})}" style="max-width:180px; border:1px solid var(--border-color); border-radius:4px;
+                        filter:drop-shadow(0 0 8px rgba(200,155,60,0.2));" />
+        </div>
+
+        <!-- ROSA GIOCATORI -->
         <h2>Rosa giocatori</h2>
         <div class="card-grid">
             <div th:each="g : ${squadra.giocatori}" class="card">
-                <!-- Immagine giocatore DENTRO il th:each -->
-                <div th:if="${g.immagine != null and !#strings.isEmpty(g.immagine)}" style="margin-bottom:0.8rem;">
-                    <img th:src="${g.immagine}"
-                        style="width:100%; max-height:200px; object-fit:cover; object-position:top; border-radius:2px;" />
+                <div th:if="${g.immagine != null and !#strings.isEmpty(g.immagine)}"
+                    style="margin-bottom:0.8rem; overflow:hidden; border-radius:2px; max-height:180px;">
+                    <img th:src="${g.immagine}" style="width:100%; height:180px; object-fit:cover; object-position:top;
+                                transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'"
+                        onmouseout="this.style.transform='scale(1)'" />
                 </div>
                 <h3 th:text="${g.nome} + ' ' + ${g.cognome}">Giocatore</h3>
-                <p th:text="'Ruolo: ' + ${g.ruolo}">Ruolo</p>
+                <p style="color:var(--color-gold); font-size:0.8rem; letter-spacing:1px; text-transform:uppercase;"
+                    th:text="${g.ruolo}">Ruolo</p>
                 <p th:text="'Altezza: ' + ${g.altezza} + ' cm'">Altezza</p>
-                <div sec:authorize="hasRole('ADMIN')" style="margin-top:0.5rem; display:flex; gap:0.5rem;">
+                <div sec:authorize="hasRole('ADMIN')" style="margin-top:0.8rem; display:flex; gap:0.5rem;">
                     <a th:href="@{/admin/giocatori/{id}/modifica(id=${g.id})}" class="btn"
                         style="padding:0.3rem 0.8rem; font-size:0.8rem;">✏</a>
                     <a th:href="@{/admin/giocatori/{id}/elimina(id=${g.id})}" class="btn btn-danger"

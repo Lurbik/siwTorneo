@@ -19,6 +19,15 @@
             th:text="'Risultato: ' + ${partita.goalHome} + ' - ' + ${partita.goalGuest}">
         </p>
 
+        <div th:if="${partita.arbitro != null}" style="margin-top:1rem; display:flex; align-items:center; gap:1rem;">
+            <div th:if="${partita.arbitro.immagine != null and !#strings.isEmpty(partita.arbitro.immagine)}">
+                <img th:src="${partita.arbitro.immagine}" style="width:60px; height:60px; object-fit:cover; border-radius:50%; 
+                    border:2px solid var(--color-gold);" />
+            </div>
+            <p th:text="'Arbitro: ' + ${partita.arbitro.nome} + ' ' + ${partita.arbitro.cognome}"
+                style="color:var(--color-text);">Arbitro</p>
+        </div>
+
         <h2>Commenti</h2>
 
         <!-- Form nuovo commento — solo utenti loggati -->

@@ -35,4 +35,6 @@ public class Arbitro {
 
     @OneToMany(mappedBy = "arbitro")
     private List<Partita> partite = new ArrayList<>();
+
+    private String immagine;
 }

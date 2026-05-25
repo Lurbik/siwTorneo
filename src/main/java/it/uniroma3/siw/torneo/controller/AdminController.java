@@ -4,9 +4,9 @@ import it.uniroma3.siw.torneo.model.*;
 import it.uniroma3.siw.torneo.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.List;
 import jakarta.validation.Valid;
@@ -35,6 +35,11 @@ public class AdminController {
         this.arbitroService = arbitroService;
         this.partitaService = partitaService;
         this.fileService = fileService;
+    }
+
+    @InitBinder("squadra")
+    public void initBinderSquadra(WebDataBinder binder) {
+        binder.setDisallowedFields("immagine", "maglietta");
     }
 
     @GetMapping
@@ -71,8 +76,7 @@ public class AdminController {
 
     @PostMapping("/tornei/{id}/modifica")
     public String modificaTorneo(@PathVariable Long id,
-            @Valid @ModelAttribute Torneo torneo,
-            BindingResult result) {
+            @Valid @ModelAttribute Torneo torneo, BindingResult result) {
         if (result.hasErrors())
             return "admin/form-torneo";
         torneo.setId(id);
@@ -108,7 +112,7 @@ public class AdminController {
     }
 
     @PostMapping("/squadre/salva")
-    public String salvaSquadra(@Valid @ModelAttribute Squadra squadra,
+    public String salvaSquadra(@Valid @ModelAttribute("squadra") Squadra squadra,
             BindingResult result,
             @RequestParam(required = false) MultipartFile immagine,
             @RequestParam(required = false) MultipartFile maglietta) throws IOException {
@@ -136,7 +140,7 @@ public class AdminController {
 
     @PostMapping("/squadre/{id}/modifica")
     public String modificaSquadra(@PathVariable Long id,
-            @Valid @ModelAttribute Squadra squadra,
+            @Valid @ModelAttribute("squadra") Squadra squadra,
             BindingResult result,
             @RequestParam(required = false) MultipartFile immagine,
             @RequestParam(required = false) MultipartFile maglietta) throws IOException {
@@ -170,9 +174,8 @@ public class AdminController {
             BindingResult result,
             @RequestParam(required = false) Long squadraId,
             Model model) {
-        if (squadraId == null) {
+        if (squadraId == null)
             result.rejectValue("squadra", "error.squadra", "Seleziona una squadra");
-        }
         if (result.hasErrors()) {
             model.addAttribute("squadre", squadraService.findAll());
             model.addAttribute("ruoli", RuoloGiocatore.values());
@@ -198,9 +201,8 @@ public class AdminController {
             BindingResult result,
             @RequestParam(required = false) Long squadraId,
             Model model) {
-        if (squadraId == null) {
+        if (squadraId == null)
             result.rejectValue("squadra", "error.squadra", "Seleziona una squadra");
-        }
         if (result.hasErrors()) {
             model.addAttribute("squadre", squadraService.findAll());
             model.addAttribute("ruoli", RuoloGiocatore.values());
@@ -236,6 +238,22 @@ public class AdminController {
         return "redirect:/";
     }
 
+    @GetMapping("/arbitri/{id}/modifica")
+    public String modificaArbitroForm(@PathVariable Long id, Model model) {
+        model.addAttribute("arbitro", arbitroService.findById(id));
+        return "admin/form-arbitro";
+    }
+
+    @PostMapping("/arbitri/{id}/modifica")
+    public String modificaArbitro(@PathVariable Long id,
+            @Valid @ModelAttribute Arbitro arbitro, BindingResult result) {
+        if (result.hasErrors())
+            return "admin/form-arbitro";
+        arbitro.setId(id);
+        arbitroService.save(arbitro);
+        return "redirect:/";
+    }
+
     // ---- PARTITA ----
     @GetMapping("/partite/nuova")
     public String nuovaPartitaForm(Model model) {
@@ -255,7 +273,6 @@ public class AdminController {
             @RequestParam(required = false) Long squadraOspiteId,
             @RequestParam(required = false) Long arbitroId,
             Model model) {
-
         if (torneoId == null)
             result.rejectValue("torneo", "error.torneo", "Seleziona un torneo");
         if (squadraCasaId == null)
@@ -264,7 +281,6 @@ public class AdminController {
             result.rejectValue("squadraOspite", "error.squadraOspite", "Seleziona la squadra ospite");
         if (arbitroId == null)
             result.rejectValue("arbitro", "error.arbitro", "Seleziona un arbitro");
-
         if (result.hasErrors()) {
             model.addAttribute("tornei", torneoService.findAll());
             model.addAttribute("squadre", squadraService.findAll());
@@ -323,27 +339,9 @@ public class AdminController {
         return "redirect:/partite/" + id;
     }
 
-    @GetMapping("/arbitri/{id}/modifica")
-    public String modificaArbitroForm(@PathVariable Long id, Model model) {
-        model.addAttribute("arbitro", arbitroService.findById(id));
-        return "admin/form-arbitro";
-    }
-
-    @PostMapping("/arbitri/{id}/modifica")
-    public String modificaArbitro(@PathVariable Long id,
-            @Valid @ModelAttribute Arbitro arbitro,
-            BindingResult result) {
-        if (result.hasErrors())
-            return "admin/form-arbitro";
-        arbitro.setId(id);
-        arbitroService.save(arbitro);
-        return "redirect:/";
-    }
-
     @GetMapping("/partite/{id}/elimina")
     public String eliminaPartita(@PathVariable Long id) {
         partitaService.deleteById(id);
         return "redirect:/partite";
     }
-
 }

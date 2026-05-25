@@ -11,6 +11,8 @@
             <form
                 th:action="${arbitro.id != null} ? @{/admin/arbitri/{id}/modifica(id=${arbitro.id})} : @{/admin/arbitri/salva}"
                 th:object="${arbitro}" method="post">
+
+                <!-- Errori PRIMA dei campi -->
                 <div th:if="${#fields.hasAnyErrors()}" style="background:rgba(139,0,0,0.2); border:1px solid var(--noxus);
                             border-radius:4px; padding:1rem; margin-bottom:1rem;">
                     <p style="color:var(--noxus); font-weight:bold; margin-bottom:0.5rem;">⚠ Correggi i seguenti errori:
@@ -19,6 +21,7 @@
                         <li th:each="err : ${#fields.allErrors()}" th:text="${err}">Errore</li>
                     </ul>
                 </div>
+
                 <div class="form-group">
                     <label>Nome</label>
                     <input type="text" th:field="*{nome}"
@@ -40,6 +43,15 @@
                     <span th:if="${#fields.hasErrors('codiceArbitrale')}" th:errors="*{codiceArbitrale}"
                         style="color:var(--noxus); font-size:0.8rem; display:block; margin-top:0.3rem;"></span>
                 </div>
+                <div class="form-group">
+                    <label>URL Immagine (opzionale)</label>
+                    <input type="text" th:field="*{immagine}" placeholder="https://ddragon.leagueoflegends.com/..." />
+                    <div th:if="${arbitro.immagine != null and !#strings.isEmpty(arbitro.immagine)}"
+                        style="margin-top:0.5rem;">
+                        <img th:src="${arbitro.immagine}" style="max-width:100px; border-radius:4px;" />
+                    </div>
+                </div>
+
                 <button type="submit" class="btn"
                     th:text="${arbitro.id != null} ? 'Salva modifiche' : 'Crea'">Salva</button>
             </form>
