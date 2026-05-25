@@ -2,6 +2,10 @@ package it.uniroma3.siw.torneo.service;
 
 import it.uniroma3.siw.torneo.model.Torneo;
 import it.uniroma3.siw.torneo.repository.TorneoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,4 +55,15 @@ public class TorneoService {
         return torneoRepository.findByNomeContainingIgnoreCase(nome);
     }
 
+    @Transactional(readOnly = true)
+    public Page<Torneo> findPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("anno").descending());
+        return torneoRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Torneo> findByNomePaginated(String nome, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("anno").descending());
+        return torneoRepository.findByNomeContainingIgnoreCase(nome, pageable);
+    }
 }

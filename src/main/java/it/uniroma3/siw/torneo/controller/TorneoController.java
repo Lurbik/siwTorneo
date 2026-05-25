@@ -1,6 +1,8 @@
 package it.uniroma3.siw.torneo.controller;
 
+import it.uniroma3.siw.torneo.model.Torneo;
 import it.uniroma3.siw.torneo.service.TorneoService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,14 +25,21 @@ public class TorneoController {
     }
 
     @GetMapping("/tornei")
-    public String listaTornei(@RequestParam(required = false) String search, Model model) {
+    public String listaTornei(@RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            Model model) {
+        Page<Torneo> pagina;
         if (search != null && !search.isBlank()) {
-            model.addAttribute("tornei", torneoService.findByNome(search));
+            pagina = torneoService.findByNomePaginated(search, page, 6);
         } else {
-            model.addAttribute("tornei", torneoService.findAll());
+            pagina = torneoService.findPaginated(page, 6);
         }
+        model.addAttribute("tornei", pagina.getContent());
+        model.addAttribute("paginaCorrente", page);
+        model.addAttribute("totalePagine", pagina.getTotalPages());
+        model.addAttribute("hasPrecedente", pagina.hasPrevious());
+        model.addAttribute("hasSuccessiva", pagina.hasNext());
         model.addAttribute("search", search);
         return "tornei/lista";
     }
-
 }

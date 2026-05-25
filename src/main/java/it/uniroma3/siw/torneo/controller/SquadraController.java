@@ -1,6 +1,8 @@
 package it.uniroma3.siw.torneo.controller;
 
+import it.uniroma3.siw.torneo.model.Squadra;
 import it.uniroma3.siw.torneo.service.SquadraService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,14 +25,21 @@ public class SquadraController {
     }
 
     @GetMapping("/squadre")
-    public String listaSquadre(@RequestParam(required = false) String search, Model model) {
+    public String listaSquadre(@RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            Model model) {
+        Page<Squadra> pagina;
         if (search != null && !search.isBlank()) {
-            model.addAttribute("squadre", squadraService.findByNome(search));
+            pagina = squadraService.findByNomePaginated(search, page, 8);
         } else {
-            model.addAttribute("squadre", squadraService.findAll());
+            pagina = squadraService.findPaginated(page, 8);
         }
+        model.addAttribute("squadre", pagina.getContent());
+        model.addAttribute("paginaCorrente", page);
+        model.addAttribute("totalePagine", pagina.getTotalPages());
+        model.addAttribute("hasPrecedente", pagina.hasPrevious());
+        model.addAttribute("hasSuccessiva", pagina.hasNext());
         model.addAttribute("search", search);
         return "squadre/lista";
     }
-
 }

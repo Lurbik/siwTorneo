@@ -9,10 +9,11 @@
         <h1>Squadre</h1>
         <form th:action="@{/squadre}" method="get" style="margin-bottom:1.5rem; display:flex; gap:0.5rem;">
             <input type="text" name="search" th:value="${search}" placeholder="Cerca squadra..." style="flex:1; background:var(--bg-secondary); border:1px solid var(--border-color);
-                          color:var(--color-text-light); padding:0.6rem 1rem; border-radius:2px;" />
+                       color:var(--color-text-light); padding:0.6rem 1rem; border-radius:2px;" />
             <button type="submit" class="btn">Cerca</button>
             <a th:if="${search != null}" href="/squadre" class="btn">✕</a>
         </form>
+
         <div class="card-grid">
             <div th:each="s : ${squadre}" class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -30,8 +31,27 @@
                 </div>
             </div>
         </div>
+
         <div th:if="${#lists.isEmpty(squadre)}">
-            <p style="color:var(--color-text);">Nessuna squadra disponibile.</p>
+            <p style="color:var(--color-text);">Nessuna squadra trovata.</p>
+        </div>
+
+        <!-- Paginazione -->
+        <div th:if="${totalePagine > 1}"
+            style="display:flex; justify-content:center; align-items:center; gap:0.5rem; margin-top:2rem; flex-wrap:wrap;">
+
+            <a th:if="${hasPrecedente}" th:href="@{/squadre(page=${paginaCorrente - 1}, search=${search})}" class="btn"
+                style="padding:0.4rem 1rem;">← Precedente</a>
+
+            <span th:each="i : ${#numbers.sequence(0, totalePagine - 1)}">
+                <a th:href="@{/squadre(page=${i}, search=${search})}" th:text="${i + 1}" class="btn" th:style="${i == paginaCorrente} ?
+                       'background:var(--color-gold); color:var(--bg-primary); padding:0.4rem 0.8rem;' :
+                       'padding:0.4rem 0.8rem;'">
+                </a>
+            </span>
+
+            <a th:if="${hasSuccessiva}" th:href="@{/squadre(page=${paginaCorrente + 1}, search=${search})}" class="btn"
+                style="padding:0.4rem 1rem;">Successiva →</a>
         </div>
     </div>
     <footer>⚔ Runeterra Football League</footer>
