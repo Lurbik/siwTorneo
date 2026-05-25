@@ -13,46 +13,74 @@ function Classifica({ torneoId }) {
             .then(data => { setClassifica(data); setLoading(false); });
     }, [torneoId]);
 
-    if (loading) return <p style={{ color: 'var(--color-text)' }}>Caricamento classifica...</p>;
+    if (loading) return <p style={{ color: 'var(--color-text)', letterSpacing: '1px' }}>Caricamento classifica...</p>;
 
     return (
         <div>
             <h2>🏆 Classifica</h2>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                    <tr style={{ borderBottom: '1px solid var(--color-gold)', color: 'var(--color-gold)' }}>
-                        <th style={{ padding: '0.5rem', textAlign: 'left' }}>#</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'left' }}>Squadra</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'center' }}>P</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'center' }}>V</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'center' }}>N</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'center' }}>S</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'center' }}>GF</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'center' }}>GS</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'center' }}>DR</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'center' }}>Pt</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {classifica.map((s, i) => (
-                        <tr key={s.id} style={{
-                            borderBottom: '1px solid var(--border-color)',
-                            background: i === 0 ? 'rgba(200,155,60,0.1)' : 'transparent'
+            <div style={{
+                background: 'linear-gradient(135deg, var(--bg-card) 0%, #0a1628 100%)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '4px',
+                overflow: 'hidden'
+            }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                        <tr style={{
+                            background: 'linear-gradient(90deg, rgba(200,155,60,0.15) 0%, rgba(200,155,60,0.05) 100%)',
+                            borderBottom: '1px solid rgba(200,155,60,0.4)'
                         }}>
-                            <td style={{ padding: '0.6rem', color: 'var(--color-text)' }}>{i + 1}</td>
-                            <td style={{ padding: '0.6rem', color: 'var(--color-text-light)', fontWeight: i < 3 ? 'bold' : 'normal' }}>{s.nome}</td>
-                            <td style={{ padding: '0.6rem', textAlign: 'center', color: 'var(--color-text)' }}>{s.vinte + s.pareggiate + s.perse}</td>
-                            <td style={{ padding: '0.6rem', textAlign: 'center', color: 'var(--ionia)' }}>{s.vinte}</td>
-                            <td style={{ padding: '0.6rem', textAlign: 'center', color: 'var(--color-text)' }}>{s.pareggiate}</td>
-                            <td style={{ padding: '0.6rem', textAlign: 'center', color: 'var(--noxus)' }}>{s.perse}</td>
-                            <td style={{ padding: '0.6rem', textAlign: 'center', color: 'var(--color-text)' }}>{s.golfatti}</td>
-                            <td style={{ padding: '0.6rem', textAlign: 'center', color: 'var(--color-text)' }}>{s.golsubiti}</td>
-                            <td style={{ padding: '0.6rem', textAlign: 'center', color: 'var(--color-text)' }}>{s.differenzaReti > 0 ? '+' + s.differenzaReti : s.differenzaReti}</td>
-                            <td style={{ padding: '0.6rem', textAlign: 'center', color: 'var(--color-gold)', fontWeight: 'bold' }}>{s.punti}</td>
+                            {['#', 'Squadra', 'P', 'V', 'N', 'S', 'GF', 'GS', 'DR', 'Pt'].map((h, i) => (
+                                <th key={i} style={{
+                                    padding: '0.7rem 0.5rem',
+                                    textAlign: i <= 1 ? 'left' : 'center',
+                                    color: 'var(--color-gold)',
+                                    fontSize: '0.75rem',
+                                    letterSpacing: '1.5px',
+                                    fontWeight: 'normal',
+                                    textTransform: 'uppercase'
+                                }}>{h}</th>
+                            ))}
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {classifica.map((s, i) => (
+                            <tr key={s.id} style={{
+                                borderBottom: '1px solid rgba(30,58,95,0.6)',
+                                background: i === 0
+                                    ? 'rgba(200,155,60,0.08)'
+                                    : i < 3
+                                        ? 'rgba(30,90,160,0.05)'
+                                        : 'transparent',
+                                transition: 'background 0.2s'
+                            }}
+                                onMouseEnter={e => e.currentTarget.style.background = 'rgba(30,90,160,0.1)'}
+                                onMouseLeave={e => e.currentTarget.style.background = i === 0 ? 'rgba(200,155,60,0.08)' : i < 3 ? 'rgba(30,90,160,0.05)' : 'transparent'}
+                            >
+                                <td style={{ padding: '0.6rem 0.5rem', color: 'var(--color-text)', fontSize: '0.85rem' }}>
+                                    {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}
+                                </td>
+                                <td style={{
+                                    padding: '0.6rem 0.5rem',
+                                    color: i < 3 ? 'var(--color-gold-light)' : 'var(--color-text-light)',
+                                    fontWeight: i < 3 ? 'bold' : 'normal',
+                                    letterSpacing: '0.5px'
+                                }}>{s.nome}</td>
+                                <td style={{ padding: '0.6rem 0.5rem', textAlign: 'center', color: 'var(--color-text)', fontSize: '0.9rem' }}>{s.vinte + s.pareggiate + s.perse}</td>
+                                <td style={{ padding: '0.6rem 0.5rem', textAlign: 'center', color: 'var(--ionia)', fontWeight: 'bold' }}>{s.vinte}</td>
+                                <td style={{ padding: '0.6rem 0.5rem', textAlign: 'center', color: 'var(--color-text)' }}>{s.pareggiate}</td>
+                                <td style={{ padding: '0.6rem 0.5rem', textAlign: 'center', color: 'var(--noxus)', fontWeight: 'bold' }}>{s.perse}</td>
+                                <td style={{ padding: '0.6rem 0.5rem', textAlign: 'center', color: 'var(--color-text)' }}>{s.golfatti}</td>
+                                <td style={{ padding: '0.6rem 0.5rem', textAlign: 'center', color: 'var(--color-text)' }}>{s.golsubiti}</td>
+                                <td style={{ padding: '0.6rem 0.5rem', textAlign: 'center', color: s.differenzaReti > 0 ? 'var(--ionia)' : s.differenzaReti < 0 ? 'var(--noxus)' : 'var(--color-text)' }}>
+                                    {s.differenzaReti > 0 ? '+' + s.differenzaReti : s.differenzaReti}
+                                </td>
+                                <td style={{ padding: '0.6rem 0.5rem', textAlign: 'center', color: 'var(--color-gold)', fontWeight: 'bold', fontSize: '1rem' }}>{s.punti}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }
@@ -102,24 +130,31 @@ function Calendario({ torneoId }) {
 
     const btnStyle = (attivo) => ({
         padding: '0.4rem 1rem',
-        border: '1px solid var(--color-gold)',
-        background: attivo ? 'var(--color-gold)' : 'transparent',
-        color: attivo ? 'var(--bg-primary)' : 'var(--color-gold)',
-        cursor: 'pointer', borderRadius: '2px', fontSize: '0.8rem'
+        border: `1px solid ${attivo ? 'var(--color-gold)' : 'rgba(200,155,60,0.3)'}`,
+        background: attivo ? 'rgba(200,155,60,0.15)' : 'transparent',
+        color: attivo ? 'var(--color-gold)' : 'var(--color-text)',
+        cursor: 'pointer',
+        borderRadius: '2px',
+        fontSize: '0.75rem',
+        letterSpacing: '1px',
+        textTransform: 'uppercase',
+        transition: 'all 0.2s',
+        boxShadow: attivo ? '0 0 10px rgba(200,155,60,0.2)' : 'none'
     });
 
     const selectStyle = {
-        background: 'var(--bg-secondary)',
-        border: '1px solid var(--color-gold)',
-        color: 'var(--color-gold)',
+        background: 'rgba(1,10,19,0.8)',
+        border: '1px solid rgba(200,155,60,0.4)',
+        color: 'var(--color-gold-light)',
         padding: '0.4rem 0.8rem',
         borderRadius: '2px',
-        fontSize: '0.85rem',
+        fontSize: '0.8rem',
         cursor: 'pointer',
-        minWidth: '200px'
+        minWidth: '200px',
+        letterSpacing: '0.5px'
     };
 
-    if (loading) return <p style={{ color: 'var(--color-text)' }}>Caricamento calendario...</p>;
+    if (loading) return <p style={{ color: 'var(--color-text)', letterSpacing: '1px' }}>Caricamento calendario...</p>;
 
     return (
         <div>
@@ -128,9 +163,12 @@ function Calendario({ torneoId }) {
             {/* Filtri */}
             <div style={{
                 display: 'flex', gap: '1rem', flexWrap: 'wrap',
-                alignItems: 'center', marginBottom: '1.2rem'
+                alignItems: 'center', marginBottom: '1.5rem',
+                padding: '1rem',
+                background: 'linear-gradient(135deg, var(--bg-card) 0%, #0a1628 100%)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '4px'
             }}>
-                {/* Filtro stato */}
                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                     {['TUTTE', 'COMPLETATA', 'IN_ATTESA'].map(f => (
                         <button key={f} onClick={() => setFiltroStato(f)} style={btnStyle(filtroStato === f)}>
@@ -138,13 +176,7 @@ function Calendario({ torneoId }) {
                         </button>
                     ))}
                 </div>
-
-                {/* Filtro squadra — tendina */}
-                <select
-                    value={filtroSquadra}
-                    onChange={e => setFiltroSquadra(e.target.value)}
-                    style={selectStyle}
-                >
+                <select value={filtroSquadra} onChange={e => setFiltroSquadra(e.target.value)} style={selectStyle}>
                     <option value="TUTTE">⚔ Tutte le squadre</option>
                     {squadre.map(s => (
                         <option key={s} value={s}>{s}</option>
@@ -155,9 +187,10 @@ function Calendario({ torneoId }) {
             {/* Partite */}
             {partiteFiltrate.map(p => {
                 const risultato = getRisultato(p);
+                const isCompletata = p.stato === 'COMPLETATA';
                 return (
                     <div key={p.id} style={{
-                        background: 'var(--bg-card)',
+                        background: 'linear-gradient(135deg, var(--bg-card) 0%, #0a1628 100%)',
                         border: '1px solid var(--border-color)',
                         borderRadius: '4px',
                         padding: '0.8rem 1rem',
@@ -165,14 +198,25 @@ function Calendario({ torneoId }) {
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        gap: '0.5rem'
-                    }}>
+                        gap: '0.5rem',
+                        transition: 'border-color 0.2s, box-shadow 0.2s'
+                    }}
+                        onMouseEnter={e => {
+                            e.currentTarget.style.borderColor = 'rgba(200,155,60,0.4)';
+                            e.currentTarget.style.boxShadow = '0 0 15px rgba(30,90,160,0.15)';
+                        }}
+                        onMouseLeave={e => {
+                            e.currentTarget.style.borderColor = 'var(--border-color)';
+                            e.currentTarget.style.boxShadow = 'none';
+                        }}
+                    >
                         {/* Badge V/N/S */}
                         {risultato && (
                             <div style={{
-                                fontWeight: 'bold', fontSize: '0.9rem',
+                                fontWeight: 'bold', fontSize: '0.85rem',
                                 color: risultato.colore,
-                                minWidth: '20px', textAlign: 'center'
+                                minWidth: '20px', textAlign: 'center',
+                                letterSpacing: '1px'
                             }}>
                                 {risultato.testo}
                             </div>
@@ -181,25 +225,40 @@ function Calendario({ torneoId }) {
                         {/* Squadra casa */}
                         <div style={{
                             flex: 1, textAlign: 'right',
-                            color: filtroSquadra === p.squadraCasa
-                                ? 'var(--color-gold)' : 'var(--color-text-light)',
+                            color: filtroSquadra === p.squadraCasa ? 'var(--color-gold)' : 'var(--color-text-light)',
                             fontWeight: filtroSquadra === p.squadraCasa ? 'bold' : 'normal',
-                            fontSize: 'clamp(0.75rem, 2vw, 0.95rem)'
+                            fontSize: 'clamp(0.75rem, 2vw, 0.9rem)',
+                            letterSpacing: '0.5px'
                         }}>
                             {p.squadraCasa}
                         </div>
 
                         {/* Centro */}
-                        <div style={{ padding: '0 0.8rem', textAlign: 'center', minWidth: '100px' }}>
-                            {p.stato === 'COMPLETATA'
-                                ? <span style={{ color: 'var(--color-gold)', fontWeight: 'bold', fontSize: '1.1rem' }}>
+                        <div style={{ padding: '0 0.8rem', textAlign: 'center', minWidth: '110px' }}>
+                            {isCompletata
+                                ? <span style={{
+                                    color: 'var(--color-gold)',
+                                    fontWeight: 'bold',
+                                    fontSize: '1.1rem',
+                                    textShadow: '0 0 10px rgba(200,155,60,0.3)'
+                                }}>
                                     {p.goalHome} — {p.goalGuest}
                                 </span>
-                                : <span style={{ color: 'var(--color-text)', fontSize: '0.8rem' }}>
+                                : <span style={{
+                                    color: 'var(--color-text)',
+                                    fontSize: '0.75rem',
+                                    letterSpacing: '0.5px'
+                                }}>
                                     {formatData(p.dataOra)}
                                 </span>
                             }
-                            <div style={{ fontSize: '0.7rem', color: 'var(--color-text)', marginTop: '0.2rem' }}>
+                            <div style={{
+                                fontSize: '0.65rem',
+                                color: 'var(--color-text)',
+                                marginTop: '0.2rem',
+                                letterSpacing: '0.5px',
+                                opacity: 0.7
+                            }}>
                                 {p.luogo}
                             </div>
                         </div>
@@ -207,10 +266,10 @@ function Calendario({ torneoId }) {
                         {/* Squadra ospite */}
                         <div style={{
                             flex: 1, textAlign: 'left',
-                            color: filtroSquadra === p.squadraOspite
-                                ? 'var(--color-gold)' : 'var(--color-text-light)',
+                            color: filtroSquadra === p.squadraOspite ? 'var(--color-gold)' : 'var(--color-text-light)',
                             fontWeight: filtroSquadra === p.squadraOspite ? 'bold' : 'normal',
-                            fontSize: 'clamp(0.75rem, 2vw, 0.95rem)'
+                            fontSize: 'clamp(0.75rem, 2vw, 0.9rem)',
+                            letterSpacing: '0.5px'
                         }}>
                             {p.squadraOspite}
                         </div>
@@ -219,7 +278,7 @@ function Calendario({ torneoId }) {
             })}
 
             {partiteFiltrate.length === 0 &&
-                <p style={{ color: 'var(--color-text)' }}>Nessuna partita trovata.</p>
+                <p style={{ color: 'var(--color-text)', letterSpacing: '1px' }}>Nessuna partita trovata.</p>
             }
         </div>
     );
@@ -243,16 +302,29 @@ function App() {
     return (
         <div>
             {/* Selettore torneo */}
-            <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                <span style={{ color: 'var(--color-gold-light)' }}>Torneo:</span>
+            <div style={{
+                marginBottom: '1.5rem',
+                display: 'flex', gap: '1rem',
+                alignItems: 'center', flexWrap: 'wrap'
+            }}>
+                <span style={{
+                    color: 'var(--color-text)',
+                    fontSize: '0.75rem',
+                    letterSpacing: '2px',
+                    textTransform: 'uppercase'
+                }}>Torneo:</span>
                 {tornei.map(t => (
                     <button key={t.id} onClick={() => setTorneoSelezionato(t.id)}
                         style={{
-                            padding: '0.4rem 1rem',
-                            border: '1px solid var(--color-gold)',
-                            background: torneoSelezionato === t.id ? 'var(--color-gold)' : 'transparent',
-                            color: torneoSelezionato === t.id ? 'var(--bg-primary)' : 'var(--color-gold)',
-                            cursor: 'pointer', borderRadius: '2px'
+                            padding: '0.4rem 1.2rem',
+                            border: `1px solid ${torneoSelezionato === t.id ? 'var(--color-gold)' : 'rgba(200,155,60,0.3)'}`,
+                            background: torneoSelezionato === t.id ? 'rgba(200,155,60,0.15)' : 'transparent',
+                            color: torneoSelezionato === t.id ? 'var(--color-gold)' : 'var(--color-text)',
+                            cursor: 'pointer', borderRadius: '2px',
+                            fontSize: '0.8rem', letterSpacing: '1px',
+                            textTransform: 'uppercase',
+                            boxShadow: torneoSelezionato === t.id ? '0 0 12px rgba(200,155,60,0.2)' : 'none',
+                            transition: 'all 0.2s'
                         }}>
                         {t.nome}
                     </button>
@@ -260,16 +332,21 @@ function App() {
             </div>
 
             {/* Selettore vista */}
-            <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem' }}>
+            <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '0.5rem' }}>
                 {['classifica', 'calendario'].map(v => (
                     <button key={v} onClick={() => setVista(v)}
                         style={{
                             padding: '0.5rem 1.5rem',
-                            border: '1px solid var(--border-color)',
-                            background: vista === v ? 'var(--bg-card)' : 'transparent',
+                            border: `1px solid ${vista === v ? 'rgba(200,155,60,0.5)' : 'var(--border-color)'}`,
+                            background: vista === v
+                                ? 'linear-gradient(135deg, var(--bg-card) 0%, #0a1628 100%)'
+                                : 'transparent',
                             color: vista === v ? 'var(--color-gold)' : 'var(--color-text)',
                             cursor: 'pointer', borderRadius: '2px',
-                            textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.85rem'
+                            textTransform: 'uppercase', letterSpacing: '1.5px',
+                            fontSize: '0.8rem',
+                            boxShadow: vista === v ? '0 0 15px rgba(200,155,60,0.1)' : 'none',
+                            transition: 'all 0.2s'
                         }}>
                         {v === 'classifica' ? '🏆 Classifica' : '📅 Calendario'}
                     </button>
